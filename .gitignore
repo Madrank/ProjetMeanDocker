@@ -22,3 +22,10 @@ npm-debug.log*
 # System Files
 .DS_Store
 Thumbs.db
+
+# MongoDB data
+mongo/db/
+mongo/db/*
+*.wt
+*.lock
+WiredTiger*
