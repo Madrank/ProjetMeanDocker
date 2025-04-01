@@ -1,5 +1,5 @@
 # Étape 1: Build de l'application Angular
-FROM node:19-bullseye AS builder
+FROM node:16-bullseye AS builder
 
 WORKDIR /app/frontend
 
