@@ -1,8 +1,7 @@
 # Étape 1: Build de l'application Angular
-FROM node:19-bullseye as builder
+FROM node:19-bullseye AS builder
 
-# Définir le répertoire de travail
-WORKDIR /app
+WORKDIR /app/frontend
 
 # Copier les fichiers de dépendances
 COPY frontend/package*.json ./
@@ -14,28 +13,28 @@ RUN npm install --legacy-peer-deps
 COPY frontend/ .
 
 # Build de l'application Angular en mode production
-RUN npm run build --prod
+RUN npm run build
 
 # Étape 2: Configuration du serveur
 FROM node:16-alpine
 
-# Définir le répertoire de travail
 WORKDIR /app
 
 # Copier les fichiers de dépendances du backend
 COPY backend/package*.json ./
 
 # Installer les dépendances du backend
-RUN npm install
+RUN npm install --production
 
 # Copier le code source du backend
 COPY backend/ .
 
-# Copier les fichiers buildés d'Angular depuis l'étape précédente
-COPY --from=builder /app/dist/frontend ./public
+# Créer le dossier public et copier les fichiers buildés d'Angular
+RUN mkdir -p public
+COPY --from=builder /app/frontend/dist/frontend ./public
 
 # Exposer le port utilisé par Express.js
 EXPOSE 3000
 
 # Commande de démarrage
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
